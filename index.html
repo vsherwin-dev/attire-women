@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#0c0c0e">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c0c0e">
+<meta name="color-scheme" content="dark">
+<title>Attire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500&family=Outfit:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #f6f3ee;
+    --ink-dim: rgba(246, 243, 238, 0.72);
+    --ink-quiet: rgba(246, 243, 238, 0.46);
+    --track: rgba(246, 243, 238, 0.34);
+    --chrome: rgba(8, 8, 10, 0.2);
+    --menu: #141416;
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --sans: Outfit, "Avenir Next", "Segoe UI", sans-serif;
+    --serif: "Bodoni Moda", "Bodoni MT", Didot, "Didot LT STD", "Hoefler Text", Georgia, serif;
+    --chrome-h: calc(82px + env(safe-area-inset-bottom, 0px));
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background: #0c0c0e;
+    color: #1c1b19;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  [hidden] { display: none !important; }
+
+  .page {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: flex;
+  }
+
+  .carousel {
+    container: lookbook / inline-size;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+  }
+
+  .frame {
+    container: frame / inline-size;
+    position: relative;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background: #8d8c89;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .frame:fullscreen,
+  .frame.is-expanded {
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    aspect-ratio: auto;
+    background: #0c0c0e;
+  }
+
+  .frame.is-expanded {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 460ms var(--ease);
+  }
+
+  .slide.is-active {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+  }
+
+  .tone { background: #9a9996; }
+
+  .tone[data-variant="1"] {
+    background:
+      linear-gradient(112deg, transparent 46%, #101114 50%),
+      radial-gradient(90% 80% at 12% 42%, #e7e4df 0%, #b4b2ad 46%, #8a8986 100%);
+  }
+  .tone[data-variant="2"] {
+    background:
+      linear-gradient(90deg, transparent 46%, rgba(10, 10, 12, 0.18) 46.4%, rgba(10, 10, 12, 0.18) 53%, transparent 53.4%),
+      linear-gradient(168deg, transparent 58%, #141518 62%),
+      radial-gradient(80% 70% at 50% 18%, #d5d3ce, #6e6e72 78%);
+  }
+  .tone[data-variant="3"] {
+    background:
+      linear-gradient(248deg, transparent 38%, #1a1b1e 52%),
+      radial-gradient(70% 90% at 80% 0%, #c8c6c1, #5c5d61 70%);
+  }
+  .tone[data-variant="4"] {
+    background:
+      linear-gradient(198deg, transparent 54%, #121316 70%),
+      radial-gradient(100% 80% at 30% 0%, #efece7, #9b9a96 55%, #6a6b6e 100%);
+  }
+  .tone[data-variant="5"] {
+    background:
+      linear-gradient(120deg, transparent 58%, rgba(246, 243, 238, 0.55) 59.2%, transparent 60.6%),
+      radial-gradient(80% 90% at 70% 40%, #3a3b3f, #121316 72%);
+  }
+  .tone[data-variant="6"] {
+    background:
+      linear-gradient(104deg, transparent 40%, #16171a 48%),
+      radial-gradient(90% 80% at 8% 30%, #f0ece6, #b7b4ae 50%, #7e7d7a 100%);
+  }
+  .tone[data-variant="7"] {
+    background:
+      linear-gradient(200deg, transparent 42%, #101114 64%),
+      radial-gradient(80% 70% at 40% 20%, #ddd9d3, #8e8d89 62%, #5a5b5e 100%);
+  }
+  .tone[data-variant="8"] {
+    background:
+      linear-gradient(126deg, #cfcbc4 0 34%, transparent 34.4%),
+      linear-gradient(250deg, transparent 48%, #1c1d20 60%),
+      #8a8680;
+  }
+  .tone[data-variant="9"] {
+    background:
+      linear-gradient(186deg, transparent 60%, #101114 78%),
+      radial-gradient(90% 75% at 50% 10%, #f3f0ea, #a7a59f 58%, #75746f 100%);
+  }
+  .tone[data-variant="10"] {
+    background:
+      radial-gradient(18px 18px at 62% 34%, rgba(246, 243, 238, 0.7), transparent 70%),
+      linear-gradient(118deg, transparent 52%, #0e0f12 58%),
+      radial-gradient(80% 90% at 20% 80%, #4a4b4e, #151618 70%);
+  }
+
+  .shade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 48%;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(to top, rgba(6, 6, 8, 0.78) 0%, rgba(6, 6, 8, 0.42) 46%, rgba(6, 6, 8, 0) 100%);
+  }
+
+  .stage {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding:
+      max(24px, env(safe-area-inset-top, 0px))
+      max(7%, calc(16px + env(safe-area-inset-right, 0px)))
+      calc(var(--chrome-h) + 72px)
+      max(7%, calc(16px + env(safe-area-inset-left, 0px)));
+    pointer-events: none;
+    text-align: center;
+  }
+
+  .title {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    font-size: clamp(1.85rem, 10.4cqi, 6.35rem);
+    line-height: 0.9;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.28), 0 10px 28px rgba(0, 0, 0, 0.28);
+  }
+
+  .title span { display: block; }
+
+  .title span:nth-child(2) {
+    letter-spacing: 0.2em;
+    margin: 0.06em 0;
+  }
+
+  @container frame (max-width: 420px) {
+    .title {
+      font-size: clamp(1.7rem, 11.5cqi, 2.35rem);
+      letter-spacing: 0.03em;
+    }
+    .title span:nth-child(2) { letter-spacing: 0.14em; }
+  }
+
+  .caption {
+    position: absolute;
+    left: max(20px, env(safe-area-inset-left, 0px));
+    right: max(20px, env(safe-area-inset-right, 0px));
+    bottom: calc(var(--chrome-h) + 10px);
+    margin: 0 auto;
+    max-width: 38ch;
+  }
+
+  .name,
+  .note { margin: 0; }
+
+  .name {
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .note {
+    margin-top: 6px;
+    font-size: clamp(0.88rem, 2.2cqi, 1rem);
+    line-height: 1.45;
+    color: var(--ink-dim);
+  }
+
+  .chrome {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+    padding:
+      0
+      max(10px, env(safe-area-inset-right, 0px))
+      calc(8px + env(safe-area-inset-bottom, 0px))
+      max(10px, env(safe-area-inset-left, 0px));
+    display: grid;
+    gap: 2px;
+  }
+
+  .progress {
+    display: flex;
+    gap: 5px;
+    padding: 0 8px;
+  }
+
+  .seg {
+    flex: 1;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .seg::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -14px;
+    bottom: 0;
+  }
+
+  .seg::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    transform: translateY(-50%);
+    border-radius: 2px;
+    background: var(--track);
+  }
+
+  .seg.is-on::before { background: #fff; }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .pager,
+  .tools {
+    display: flex;
+    align-items: center;
+  }
+
+  .pager { margin-left: -6px; }
+  .tools { margin-right: -6px; }
+
+  .count {
+    margin: 0;
+    min-width: 3.6rem;
+    text-align: center;
+    color: var(--ink);
+    font-size: 0.82rem;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  .icon-btn svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .icon-btn:hover,
+    .seg:hover::before { color: #fff; }
+    .icon-btn:hover { background: rgba(255, 255, 255, 0.08); }
+    .seg:hover::before { background: rgba(255, 255, 255, 0.7); }
+    .seg.is-on:hover::before { background: #fff; }
+    .menu button:hover { background: rgba(255, 255, 255, 0.06); }
+  }
+
+  .icon-btn:active { transform: scale(0.96); }
+
+  .icon-btn:focus-visible,
+  .seg:focus-visible,
+  .menu button:focus-visible,
+  .lightbox button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  .menu {
+    position: absolute;
+    right: max(12px, env(safe-area-inset-right, 0px));
+    bottom: calc(54px + env(safe-area-inset-bottom, 0px));
+    z-index: 5;
+    width: min(280px, calc(100% - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+    max-height: calc(100% - var(--chrome-h) - env(safe-area-inset-top, 0px) - 16px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 6px;
+    border-radius: 12px;
+    background: var(--menu);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.24),
+      0 16px 36px rgba(0, 0, 0, 0.38);
+  }
+
+  .menu button {
+    display: grid;
+    gap: 2px;
+    width: 100%;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    touch-action: manipulation;
+  }
+
+  .menu button[aria-current="true"] { background: rgba(255, 255, 255, 0.1); }
+
+  .menu-k {
+    font-size: 0.92rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  .menu-d {
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: var(--ink-dim);
+  }
+
+  .sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .lightbox {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 100%;
+    width: 100dvw;
+    height: 100%;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    background: #0c0c0e;
+    color: var(--ink);
+  }
+
+  .lightbox::backdrop { background: rgba(0, 0, 0, 0.55); }
+
+  .lb {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding:
+      calc(8px + env(safe-area-inset-top, 0px))
+      calc(8px + env(safe-area-inset-right, 0px))
+      calc(22px + env(safe-area-inset-bottom, 0px))
+      calc(8px + env(safe-area-inset-left, 0px));
+  }
+
+  .lb-top,
+  .lb-side {
+    display: flex;
+  }
+
+  .lb-top { justify-content: flex-end; }
+
+  .lb-stage {
+    min-height: 0;
+    display: grid;
+    place-items: center;
+    padding: 8px 52px;
+  }
+
+  .lb-stage img,
+  .lb-fallback {
+    max-width: min(1040px, 100%);
+    max-height: 100%;
+    width: auto;
+    height: auto;
+  }
+
+  .lb-stage img {
+    object-fit: contain;
+    border-radius: 10px;
+  }
+
+  .lb-fallback {
+    position: relative;
+    width: min(1040px, 100%);
+    aspect-ratio: 16 / 10;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .lb-caption {
+    margin: 14px auto 0;
+    max-width: 42ch;
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: var(--ink-dim);
+  }
+
+  .lb-caption strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--ink);
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+  }
+
+  .lb-prev,
+  .lb-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lb-prev { left: 8px; }
+  .lb-next { right: 8px; }
+
+  .lb-prev:active,
+  .lb-next:active { transform: translateY(-50%) scale(0.96); }
+
+  @media (max-width: 640px) {
+    .lb-stage { padding: 0 44px; }
+    .lb-prev { left: 0; }
+    .lb-next { right: 0; }
+    .lb-fallback {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: auto;
+    }
+    .lb-caption {
+      margin-top: 10px;
+      padding: 0 8px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .count {
+      min-width: 3.1rem;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+    }
+    .note { font-size: 0.84rem; }
+  }
+
+  @media (max-height: 520px) {
+    .stage {
+      padding-top: max(12px, env(safe-area-inset-top, 0px));
+      padding-bottom: calc(var(--chrome-h) + 36px);
+    }
+    .title {
+      font-size: clamp(1.15rem, 4.4cqi, 1.9rem);
+      letter-spacing: 0.04em;
+    }
+    .title span:nth-child(2) { letter-spacing: 0.12em; }
+    .caption { bottom: calc(var(--chrome-h) + 12px); }
+    .note {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide,
+    .icon-btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+<!--
+  Canva: host this file, then Website → Embed → paste the page URL.
+  The frame fills the embed. Give the embed the full viewport height.
+
+  Slides are the blocks below. Edit data-label and data-note in place.
+  Add a photo by setting data-src to an image address. Leave it empty for the placeholder.
+
+  Example:
+  <div class="slide tone" data-variant="1" data-label="Black tie" data-note="Tuxedo and bow tie." data-src="https://example.com/photo.jpg"></div>
+-->
+
+<main class="page">
+  <section class="carousel" aria-roledescription="carousel" aria-labelledby="women-title">
+    <div class="frame">
+      <div class="slides">
+        <div class="slide tone is-active" data-variant="6" data-label="Black tie" data-note="Floor-length gown in black, ivory, or the wedding colors." data-src=""></div>
+        <div class="slide tone" data-variant="7" data-label="Cocktail" data-note="A midi or tea-length dress." data-src=""></div>
+        <div class="slide tone" data-variant="8" data-label="Formal" data-note="A long dress, or a matching set." data-src=""></div>
+        <div class="slide tone" data-variant="9" data-label="Garden" data-note="Softer fabric and a comfortable heel." data-src=""></div>
+        <div class="slide tone" data-variant="10" data-label="The details" data-note="An evening wrap, a clutch, and studs." data-src=""></div>
+      </div>
+      <div class="shade" aria-hidden="true"></div>
+      <div class="stage">
+        <h2 class="title" id="women-title"><span>For</span><span>the</span><span>Ladies</span></h2>
+        <div class="caption">
+          <p class="name"></p>
+          <p class="note"></p>
+        </div>
+      </div>
+      <div class="chrome">
+        <div class="progress"></div>
+        <div class="controls">
+          <div class="pager">
+            <button class="icon-btn" type="button" data-action="prev" aria-label="Previous slide">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6.5 8.5 12l6 5.5"/></svg>
+            </button>
+            <p class="count" aria-live="polite" aria-atomic="true"><span data-count></span><span class="sr" data-live></span></p>
+            <button class="icon-btn" type="button" data-action="next" aria-label="Next slide">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6.5 15.5 12l-6 5.5"/></svg>
+            </button>
+          </div>
+          <div class="tools">
+            <button class="icon-btn" type="button" data-action="zoom" aria-label="Enlarge slide">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="5.25"/><path d="m14.8 14.8 4 4M10.5 8.4v4.2M8.4 10.5h4.2"/></svg>
+            </button>
+            <button class="icon-btn" type="button" data-action="menu" aria-expanded="false" aria-haspopup="true" aria-label="All slides">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="12" r="1.15" fill="currentColor"/><circle cx="12" cy="12" r="1.15" fill="currentColor"/><circle cx="18" cy="12" r="1.15" fill="currentColor"/></svg>
+            </button>
+            <button class="icon-btn" type="button" data-action="full" aria-pressed="false" aria-label="Full screen">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6h4v4M10 18H6v-4"/><path d="M18 6l-4.5 4.5M6 18l4.5-4.5"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="menu" hidden></div>
+    </div>
+  </section>
+</main>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged slide">
+  <div class="lb">
+    <div class="lb-top">
+      <button class="icon-btn" type="button" data-zoom="close" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="lb-stage">
+      <button class="icon-btn lb-prev" type="button" data-zoom="prev" aria-label="Previous slide">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6.5 8.5 12l6 5.5"/></svg>
+      </button>
+      <img alt="" hidden>
+      <div class="tone lb-fallback" hidden></div>
+      <button class="icon-btn lb-next" type="button" data-zoom="next" aria-label="Next slide">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6.5 15.5 12l-6 5.5"/></svg>
+      </button>
+    </div>
+    <p class="lb-caption"></p>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  var dialog = document.getElementById("lightbox");
+  var zoomImg = dialog.querySelector("img");
+  var zoomFallback = dialog.querySelector(".lb-fallback");
+  var zoomCaption = dialog.querySelector(".lb-caption");
+  var zoomApi = null;
+
+  function paintZoom() {
+    if (!zoomApi) return;
+    var slide = zoomApi.slide();
+    var photo = slide.querySelector("img");
+    var src = photo ? photo.currentSrc || photo.src : "";
+    if (src) {
+      zoomImg.src = src;
+      zoomImg.alt = slide.dataset.label || "";
+      zoomImg.hidden = false;
+      zoomFallback.hidden = true;
+    } else {
+      zoomImg.removeAttribute("src");
+      zoomImg.hidden = true;
+      zoomFallback.hidden = false;
+      zoomFallback.dataset.variant = slide.dataset.variant || "1";
+    }
+    zoomCaption.innerHTML = "";
+    var strong = document.createElement("strong");
+    strong.textContent = slide.dataset.label || "";
+    zoomCaption.appendChild(strong);
+    zoomCaption.appendChild(document.createTextNode(slide.dataset.note || ""));
+  }
+
+  function openZoom(api) {
+    zoomApi = api;
+    paintZoom();
+    if (!dialog.open) dialog.showModal();
+  }
+
+  dialog.querySelector("[data-zoom=close]").addEventListener("click", function () {
+    dialog.close();
+  });
+  dialog.querySelector("[data-zoom=prev]").addEventListener("click", function () {
+    zoomApi.go(zoomApi.index - 1);
+    paintZoom();
+  });
+  dialog.querySelector("[data-zoom=next]").addEventListener("click", function () {
+    zoomApi.go(zoomApi.index + 1);
+    paintZoom();
+  });
+  dialog.addEventListener("click", function (event) {
+    if (event.target.closest("button, img, .lb-caption, .lb-fallback")) return;
+    dialog.close();
+  });
+
+  document.querySelectorAll(".carousel").forEach(function (root) {
+    var slides = Array.prototype.slice.call(root.querySelectorAll(".slide"));
+    var frame = root.querySelector(".frame");
+    var nameEl = root.querySelector(".name");
+    var noteEl = root.querySelector(".note");
+    var countEl = root.querySelector("[data-count]");
+    var liveEl = root.querySelector("[data-live]");
+    var bar = root.querySelector(".progress");
+    var menu = root.querySelector(".menu");
+    var menuBtn = root.querySelector("[data-action=menu]");
+    var fullBtn = root.querySelector("[data-action=full]");
+    var index = 0;
+    var menuItems = [];
+
+    slides.forEach(function (slide, idx) {
+      var src = (slide.dataset.src || "").trim();
+      if (src) {
+        var img = document.createElement("img");
+        img.alt = "";
+        img.decoding = "async";
+        if (idx === 0) img.setAttribute("fetchpriority", "high");
+        else img.loading = "lazy";
+        img.src = src;
+        img.addEventListener("error", function () {
+          img.remove();
+        });
+        slide.prepend(img);
+      }
+
+      var seg = document.createElement("button");
+      seg.type = "button";
+      seg.className = "seg";
+      seg.setAttribute("aria-label", slide.dataset.label || ("Slide " + (idx + 1)));
+      seg.addEventListener("click", function () { go(idx); });
+      bar.appendChild(seg);
+
+      var item = document.createElement("button");
+      item.type = "button";
+      var kicker = document.createElement("span");
+      kicker.className = "menu-k";
+      kicker.textContent = slide.dataset.label || "";
+      var detail = document.createElement("span");
+      detail.className = "menu-d";
+      detail.textContent = slide.dataset.note || "";
+      item.appendChild(kicker);
+      item.appendChild(detail);
+      item.addEventListener("click", function () {
+        go(idx);
+        closeMenu(true);
+      });
+      menu.appendChild(item);
+      menuItems.push(item);
+    });
+
+    function go(n) {
+      index = (n + slides.length) % slides.length;
+      slides.forEach(function (slide, idx) {
+        var on = idx === index;
+        slide.classList.toggle("is-active", on);
+        slide.toggleAttribute("inert", !on);
+        slide.setAttribute("aria-hidden", on ? "false" : "true");
+      });
+      var current = slides[index];
+      nameEl.textContent = current.dataset.label || "";
+      noteEl.textContent = current.dataset.note || "";
+      countEl.textContent = (index + 1) + " / " + slides.length;
+      liveEl.textContent = ", " + (current.dataset.label || "") + ". " + (current.dataset.note || "");
+      bar.querySelectorAll(".seg").forEach(function (seg, idx) {
+        seg.classList.toggle("is-on", idx <= index);
+        if (idx === index) seg.setAttribute("aria-current", "true");
+        else seg.removeAttribute("aria-current");
+      });
+      menuItems.forEach(function (item, idx) {
+        if (idx === index) item.setAttribute("aria-current", "true");
+        else item.removeAttribute("aria-current");
+      });
+      if (dialog.open && zoomApi && zoomApi.root === root) paintZoom();
+    }
+
+    function closeMenu(restore) {
+      if (menu.hidden) return;
+      menu.hidden = true;
+      menuBtn.setAttribute("aria-expanded", "false");
+      if (restore) menuBtn.focus();
+    }
+
+    function openMenu() {
+      menu.hidden = false;
+      menuBtn.setAttribute("aria-expanded", "true");
+      var current = menu.querySelector('[aria-current="true"]') || menu.querySelector("button");
+      if (current) current.focus();
+    }
+
+    root.querySelector("[data-action=prev]").addEventListener("click", function () { go(index - 1); });
+    root.querySelector("[data-action=next]").addEventListener("click", function () { go(index + 1); });
+    root.querySelector("[data-action=zoom]").addEventListener("click", function () {
+      closeMenu(false);
+      openZoom(api);
+    });
+    menuBtn.addEventListener("click", function () {
+      if (menu.hidden) openMenu();
+      else closeMenu(false);
+    });
+
+    fullBtn.addEventListener("click", function () {
+      closeMenu(false);
+      if (document.fullscreenElement === frame) {
+        document.exitFullscreen();
+        return;
+      }
+      if (frame.requestFullscreen) {
+        frame.requestFullscreen().catch(function () {
+          frame.classList.toggle("is-expanded");
+          fullBtn.setAttribute("aria-pressed", frame.classList.contains("is-expanded") ? "true" : "false");
+        });
+        return;
+      }
+      frame.classList.toggle("is-expanded");
+      fullBtn.setAttribute("aria-pressed", frame.classList.contains("is-expanded") ? "true" : "false");
+    });
+
+    document.addEventListener("fullscreenchange", function () {
+      var on = document.fullscreenElement === frame;
+      fullBtn.setAttribute("aria-pressed", on ? "true" : "false");
+      if (!on) frame.classList.remove("is-expanded");
+    });
+
+    document.addEventListener("pointerdown", function (event) {
+      if (menu.hidden) return;
+      if (menu.contains(event.target) || menuBtn.contains(event.target)) return;
+      closeMenu(false);
+    });
+
+    root.addEventListener("keydown", function (event) {
+      if (!menu.hidden && (event.key === "Escape")) {
+        event.stopPropagation();
+        closeMenu(true);
+        return;
+      }
+      if (!menu.hidden) return;
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        go(index + 1);
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        go(index - 1);
+      }
+    });
+
+    var startX = 0;
+    var startY = 0;
+    var tracking = false;
+
+    frame.addEventListener("pointerdown", function (event) {
+      if (event.target.closest("button, .menu")) return;
+      tracking = true;
+      startX = event.clientX;
+      startY = event.clientY;
+    });
+
+    frame.addEventListener("pointerup", function (event) {
+      if (!tracking) return;
+      tracking = false;
+      var dx = event.clientX - startX;
+      var dy = event.clientY - startY;
+      if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy)) return;
+      go(dx < 0 ? index + 1 : index - 1);
+    });
+
+    frame.addEventListener("pointercancel", function () { tracking = false; });
+
+    var api = {
+      root: root,
+      get index() { return index; },
+      go: go,
+      slide: function () { return slides[index]; }
+    };
+
+    go(0);
+  });
+})();
+</script>
+</body>
+</html>

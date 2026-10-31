@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#0c0c0e">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c0c0e">
+<meta name="color-scheme" content="dark">
 <title>Attire</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,14 +21,21 @@
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
     --sans: Outfit, "Avenir Next", "Segoe UI", sans-serif;
     --serif: "Bodoni Moda", "Bodoni MT", Didot, "Didot LT STD", "Hoefler Text", Georgia, serif;
+    --chrome-h: calc(76px + env(safe-area-inset-bottom, 0px));
   }
 
   * { box-sizing: border-box; }
 
   html, body {
     margin: 0;
-    background: #f6f5f2;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background: #0c0c0e;
     color: #1c1b19;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -38,37 +48,34 @@
   [hidden] { display: none !important; }
 
   .page {
-    width: min(1120px, 100%);
-    margin: 0 auto;
-    padding: 16px 12px 28px;
-    display: grid;
-    gap: 22px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: flex;
   }
 
   .carousel {
     container: lookbook / inline-size;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
   }
 
   .frame {
     container: frame / inline-size;
     position: relative;
-    aspect-ratio: 3 / 4;
-    border-radius: 16px;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 0;
     overflow: hidden;
     background: #8d8c89;
-    box-shadow:
-      0 1px 1px rgba(0, 0, 0, 0.05),
-      0 16px 40px rgba(0, 0, 0, 0.1);
     touch-action: pan-y;
     -webkit-user-select: none;
     user-select: none;
-  }
-
-  @container lookbook (min-width: 680px) {
-    .frame {
-      aspect-ratio: 16 / 9;
-      border-radius: 18px;
-    }
   }
 
   .frame:fullscreen,
@@ -76,6 +83,7 @@
     border-radius: 0;
     width: 100%;
     height: 100%;
+    height: 100dvh;
     aspect-ratio: auto;
     background: #0c0c0e;
   }
@@ -182,7 +190,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8% 7% 28%;
+    padding:
+      max(24px, env(safe-area-inset-top, 0px))
+      max(7%, calc(16px + env(safe-area-inset-right, 0px)))
+      calc(var(--chrome-h) + 72px)
+      max(7%, calc(16px + env(safe-area-inset-left, 0px)));
     pointer-events: none;
     text-align: center;
   }
@@ -218,9 +230,9 @@
 
   .caption {
     position: absolute;
-    left: 20px;
-    right: 20px;
-    bottom: 86px;
+    left: max(20px, env(safe-area-inset-left, 0px));
+    right: max(20px, env(safe-area-inset-right, 0px));
+    bottom: calc(var(--chrome-h) + 10px);
     margin: 0 auto;
     max-width: 38ch;
   }
@@ -249,7 +261,11 @@
     right: 0;
     bottom: 0;
     z-index: 4;
-    padding: 0 10px 8px;
+    padding:
+      0
+      max(10px, env(safe-area-inset-right, 0px))
+      calc(8px + env(safe-area-inset-bottom, 0px))
+      max(10px, env(safe-area-inset-left, 0px));
     display: grid;
     gap: 2px;
   }
@@ -262,12 +278,24 @@
 
   .seg {
     flex: 1;
-    height: 22px;
+    height: 28px;
     padding: 0;
     border: 0;
     background: transparent;
     cursor: pointer;
     position: relative;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .seg::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -14px;
+    bottom: 0;
   }
 
   .seg::before {
@@ -323,6 +351,9 @@
     color: var(--ink);
     cursor: pointer;
     touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
   }
 
   .icon-btn svg {
@@ -352,12 +383,13 @@
 
   .menu {
     position: absolute;
-    right: 12px;
-    bottom: 62px;
+    right: max(12px, env(safe-area-inset-right, 0px));
+    bottom: calc(54px + env(safe-area-inset-bottom, 0px));
     z-index: 5;
-    width: min(280px, calc(100% - 24px));
-    max-height: calc(100% - 72px);
+    width: min(280px, calc(100% - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+    max-height: calc(100% - var(--chrome-h) - env(safe-area-inset-top, 0px) - 16px);
     overflow: auto;
+    overscroll-behavior: contain;
     padding: 6px;
     border-radius: 12px;
     background: var(--menu);
@@ -413,7 +445,9 @@
     padding: 0;
     border: 0;
     width: 100%;
+    width: 100dvw;
     height: 100%;
+    height: 100dvh;
     max-width: none;
     max-height: none;
     background: #0c0c0e;
@@ -426,7 +460,11 @@
     height: 100%;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    padding: 8px 8px 22px;
+    padding:
+      calc(8px + env(safe-area-inset-top, 0px))
+      calc(8px + env(safe-area-inset-right, 0px))
+      calc(22px + env(safe-area-inset-bottom, 0px))
+      calc(8px + env(safe-area-inset-left, 0px));
   }
 
   .lb-top,
@@ -497,9 +535,46 @@
   .lb-next:active { transform: translateY(-50%) scale(0.96); }
 
   @media (max-width: 640px) {
-    .lb-stage { padding: 8px 8px 0; }
+    .lb-stage { padding: 0 44px; }
     .lb-prev { left: 0; }
     .lb-next { right: 0; }
+    .lb-fallback {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: auto;
+    }
+    .lb-caption {
+      margin-top: 10px;
+      padding: 0 8px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .count {
+      min-width: 3.1rem;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+    }
+    .note { font-size: 0.84rem; }
+  }
+
+  @media (max-height: 520px) {
+    .stage {
+      padding-top: max(12px, env(safe-area-inset-top, 0px));
+      padding-bottom: calc(var(--chrome-h) + 36px);
+    }
+    .title {
+      font-size: clamp(1.15rem, 4.4cqi, 1.9rem);
+      letter-spacing: 0.04em;
+    }
+    .title span:nth-child(2) { letter-spacing: 0.12em; }
+    .caption { bottom: calc(var(--chrome-h) + 4px); }
+    .note {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -511,7 +586,7 @@
 <body>
 <!--
   Canva: host this file, then Website → Embed → paste the page URL.
-  Suggested embed height is about 800px, or let the embed scroll.
+  The frame fills the embed. Give the embed the full viewport height.
 
   Slides are the blocks below. Edit data-label and data-note in place.
   Add a photo by setting data-src to an image address. Leave it empty for the placeholder.
